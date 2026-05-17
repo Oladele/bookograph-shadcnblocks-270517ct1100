@@ -29,3 +29,4 @@ import { Button } from "@/components/ui/button";
 -- had to run `pnpm dlx shadcn@latest add button`
 -- had to copy lib/utils (needed by button) from app previously created with `pnpm create next-app@latest my-app --yes`
 -- google search error leads to Shadcn Docs for [Manual Installation](https://ui.shadcn.com/docs/installation/manual)
+-- had to rerun `pnpm dlx shadcn@latest apply --preset b3kb5ad7a`
