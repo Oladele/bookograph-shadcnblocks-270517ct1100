@@ -125,5 +125,6 @@
     }
   html {
     @apply font-sans;
+    padding: 10px;
     }
 }
