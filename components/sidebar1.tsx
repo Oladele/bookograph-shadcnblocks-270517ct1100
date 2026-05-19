@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { BookOpen, Home, LineChart } from "lucide-react";
+import { BookOpen, HelpCircle, Home, LineChart, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -21,6 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -46,6 +47,14 @@ const navItems: NavItem[] = [
   { label: "Books", icon: BookOpen, href: "/dashboard/books" },
   { label: "Graphs", icon: LineChart, href: "/dashboard/graphs" },
 ];
+
+const footerGroup = {
+  title: "Support",
+  items: [
+    { label: "Help Center", icon: HelpCircle, href: "#" },
+    { label: "Settings", icon: Settings, href: "#" },
+  ] satisfies NavItem[],
+};
 
 const sidebarLogo = {
   src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblocks-logo.svg",
@@ -123,6 +132,30 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter>
+        <SidebarGroup>
+          <SidebarGroupLabel>{footerGroup.title}</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {footerGroup.items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <SidebarMenuItem key={item.label}>
+                    <SidebarMenuButton
+                      isActive={isNavItemActive(pathname, item.href)}
+                      render={<Link href={item.href} />}
+                      tooltip={item.label}
+                    >
+                      <Icon />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );
