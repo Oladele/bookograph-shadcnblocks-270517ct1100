@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { BogChartBarHorizontal } from "@/components/bogChartBarHorizontal";
 
 export default async function BooksPage() {
   const [totalBooks, totalDownloads] = await Promise.all([
@@ -40,6 +41,7 @@ export default async function BooksPage() {
             </p>
           </CardContent>
         </Card>
+        < BogChartBarHorizontal />
       </div>
     </div>
   );
