@@ -1,20 +1,27 @@
 /**
  * Books route (`/dashboard/books`). Rendered inside Sidebar1 via `app/dashboard/layout.tsx`.
- * Loads aggregate catalog stats from `app/data/books.ts` for summary cards.
+ * Loads aggregate catalog stats from `app/data/books.ts` for summary cards and charts.
  */
-import { getTotalBooks, getTotalDownloads } from "@/app/data/books";
+import {
+  getTopDownloads,
+  getTotalBooks,
+  getTotalDownloads,
+} from "@/app/data/books";
+import { BogChartBarHorizontal } from "@/components/bogChartBarHorizontal";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BogChartBarHorizontal } from "@/components/bogChartBarHorizontal";
+
+const TOP_DOWNLOADS_LIMIT = 6;
 
 export default async function BooksPage() {
-  const [totalBooks, totalDownloads] = await Promise.all([
+  const [totalBooks, totalDownloads, topDownloads] = await Promise.all([
     getTotalBooks(),
     getTotalDownloads(),
+    getTopDownloads(TOP_DOWNLOADS_LIMIT),
   ]);
 
   return (
@@ -41,7 +48,9 @@ export default async function BooksPage() {
             </p>
           </CardContent>
         </Card>
-        < BogChartBarHorizontal />
+      </div>
+      <div className="mt-6">
+        <BogChartBarHorizontal data={topDownloads} />
       </div>
     </div>
   );
