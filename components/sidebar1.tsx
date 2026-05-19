@@ -5,7 +5,14 @@
  */
 "use client";
 
-import { BookOpen, HelpCircle, Home, LineChart, Settings } from "lucide-react";
+import {
+  BookOpen,
+  HelpCircle,
+  Home,
+  LineChart,
+  Settings,
+  Store,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -51,6 +58,7 @@ const navItems: NavItem[] = [
 const footerGroup = {
   title: "Support",
   items: [
+    { label: "Product page", icon: Store, href: "/" },
     { label: "Help Center", icon: HelpCircle, href: "#" },
     { label: "Settings", icon: Settings, href: "#" },
   ] satisfies NavItem[],
@@ -65,6 +73,9 @@ const sidebarLogo = {
 
 /** Match current route for nav highlight (Home is exact `/dashboard` only). */
 function isNavItemActive(pathname: string, href: string) {
+  if (href === "/") {
+    return pathname === "/";
+  }
   if (href === "/dashboard") {
     return pathname === "/dashboard";
   }
