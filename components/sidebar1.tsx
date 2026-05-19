@@ -1,10 +1,13 @@
-import {
-  BarChart3,
-  ClipboardList,
-  HelpCircle,
-  LayoutDashboard,
-  Settings,
-} from "lucide-react";
+/**
+ * App sidebar shell (Sidebar1): nav + main inset for dashboard routes.
+ * Used by `app/dashboard/layout.tsx`; children render in the main panel.
+ * Client component for Next.js `Link` and `usePathname` active states.
+ */
+"use client";
+
+import { BookOpen, Home, LineChart } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   Breadcrumb,
@@ -18,7 +21,6 @@ import { Separator } from "@/components/ui/separator";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
@@ -37,72 +39,50 @@ type NavItem = {
   label: string;
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   href: string;
-  isActive?: boolean;
 };
 
-type NavGroup = {
-  title: string;
-  items: NavItem[];
+const navItems: NavItem[] = [
+  { label: "Home", icon: Home, href: "/dashboard" },
+  { label: "Books", icon: BookOpen, href: "/dashboard/books" },
+  { label: "Graphs", icon: LineChart, href: "/dashboard/graphs" },
+];
+
+const sidebarLogo = {
+  src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblocks-logo.svg",
+  alt: "Bookograph",
+  title: "Bookograph",
+  description: "Your reading graph",
 };
 
-type SidebarData = {
-  logo: {
-    src: string;
-    alt: string;
-    title: string;
-    description: string;
-  };
-  navGroups: NavGroup[];
-  footerGroup: NavGroup;
-};
+/** Match current route for nav highlight (Home is exact `/dashboard` only). */
+function isNavItemActive(pathname: string, href: string) {
+  if (href === "/dashboard") {
+    return pathname === "/dashboard";
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
-const sidebarData: SidebarData = {
-  logo: {
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblocks-logo.svg",
-    alt: "Shadcnblocks",
-    title: "Shadcnblocks",
-    description: "Build your app",
-  },
-  navGroups: [
-    {
-      title: "Overview",
-      items: [
-        {
-          label: "Dashboard",
-          icon: LayoutDashboard,
-          href: "#",
-          isActive: true,
-        },
-        { label: "Tasks", icon: ClipboardList, href: "#" },
-        { label: "Roadmap", icon: BarChart3, href: "#" },
-      ],
-    },
-  ],
-  footerGroup: {
-    title: "Support",
-    items: [
-      { label: "Help Center", icon: HelpCircle, href: "#" },
-      { label: "Settings", icon: Settings, href: "#" },
-    ],
-  },
-};
+function getPageTitle(pathname: string) {
+  const item = navItems.find((nav) => isNavItemActive(pathname, nav.href));
+  return item?.label ?? "Home";
+}
 
-const SidebarLogo = ({ logo }: { logo: SidebarData["logo"] }) => {
+const SidebarLogo = () => {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton size="lg">
+        <SidebarMenuButton size="lg" render={<Link href="/dashboard" />}>
           <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
             <img
-              src={logo.src}
-              alt={logo.alt}
+              src={sidebarLogo.src}
+              alt={sidebarLogo.alt}
               className="size-6 text-primary-foreground invert dark:invert-0"
             />
           </div>
           <div className="flex flex-col gap-0.5 leading-none">
-            <span className="font-medium">{logo.title}</span>
+            <span className="font-medium">{sidebarLogo.title}</span>
             <span className="text-xs text-muted-foreground">
-              {logo.description}
+              {sidebarLogo.description}
             </span>
           </div>
         </SidebarMenuButton>
@@ -112,41 +92,37 @@ const SidebarLogo = ({ logo }: { logo: SidebarData["logo"] }) => {
 };
 
 const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
+  const pathname = usePathname();
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <SidebarLogo logo={sidebarData.logo} />
+        <SidebarLogo />
       </SidebarHeader>
       <SidebarContent>
-        {sidebarData.navGroups.map((group) => (
-          <SidebarGroup key={group.title}>
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {group.items.map((item) => (
-                  <SidebarMenuItem key={item.label}>
-                    <SidebarMenuButton isActive={item.isActive} render={<a href={item.href} />}>{item.label}</SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-      <SidebarFooter>
         <SidebarGroup>
-          <SidebarGroupLabel>{sidebarData.footerGroup.title}</SidebarGroupLabel>
+          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarData.footerGroup.items.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton render={<a href={item.href} />}>{item.label}</SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton
+                      isActive={isNavItemActive(pathname, item.href)}
+                      render={<Link href={item.href} />}
+                      tooltip={item.label}
+                    >
+                      <Icon />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-      </SidebarFooter>
+      </SidebarContent>
       <SidebarRail />
     </Sidebar>
   );
@@ -154,9 +130,14 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
 
 interface Sidebar1Props {
   className?: string;
+  /** Route content from `app/dashboard/layout.tsx` — rendered in the main panel beside the nav. */
+  children?: React.ReactNode;
 }
 
-const Sidebar1 = ({ className }: Sidebar1Props) => {
+const Sidebar1 = ({ className, children }: Sidebar1Props) => {
+  const pathname = usePathname();
+  const pageTitle = getPageTitle(pathname);
+
   return (
     <SidebarProvider className={cn(className)}>
       <AppSidebar />
@@ -170,18 +151,18 @@ const Sidebar1 = ({ className }: Sidebar1Props) => {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">Overview</BreadcrumbLink>
+                <BreadcrumbLink render={<Link href="/dashboard" />}>
+                  Bookograph
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
               <BreadcrumbItem>
-                <BreadcrumbPage>Dashboard</BreadcrumbPage>
+                <BreadcrumbPage>{pageTitle}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-        </div>
+        <main className="flex flex-1 flex-col gap-4 p-4">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
