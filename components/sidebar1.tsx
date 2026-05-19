@@ -40,6 +40,7 @@ import {
   SidebarProvider,
   SidebarRail,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 
@@ -88,10 +89,16 @@ function getPageTitle(pathname: string) {
 }
 
 const SidebarLogo = () => {
+  const { toggleSidebar } = useSidebar();
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton size="lg" render={<Link href="/" />}>
+        <SidebarMenuButton
+          size="lg"
+          onClick={toggleSidebar}
+          aria-label="Close sidebar"
+        >
           <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
             <img
               src={sidebarLogo.src}
