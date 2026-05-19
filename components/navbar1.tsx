@@ -1,6 +1,10 @@
+/**
+ * Marketing site navbar (Navbar1). Used in `app/(marketing)/layout.tsx`.
+ * Dashboard CTA sits beside Login/Signup (desktop) or below them (mobile).
+ */
 "use client";
 
-import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
+import { Book, LayoutDashboard, Menu, Sunset, Trees, Zap } from "lucide-react";
 
 import {
   Accordion,
@@ -34,6 +38,11 @@ interface MenuItem {
   items?: MenuItem[];
 }
 
+type DashboardLink = {
+  title: string;
+  url: string;
+};
+
 interface Navbar1Props {
   className?: string;
   logo?: {
@@ -54,6 +63,7 @@ interface Navbar1Props {
       url: string;
     };
   };
+  dashboard?: DashboardLink;
 }
 
 const Navbar1 = ({
@@ -64,7 +74,7 @@ const Navbar1 = ({
     title: "Shadcnblocks.com",
   },
   menu = [
-    { title: "Home", url: "#" },
+    { title: "Home", url: "/" },
     {
       title: "Products",
       url: "#",
@@ -139,6 +149,7 @@ const Navbar1 = ({
     login: { title: "Login", url: "#" },
     signup: { title: "Sign up", url: "#" },
   },
+  dashboard = { title: "Dashboard", url: "/dashboard" },
   className,
 }: Navbar1Props) => {
   return (
@@ -166,9 +177,32 @@ const Navbar1 = ({
               </NavigationMenu>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" render={<a href={auth.login.url} />} nativeButton={false}>{auth.login.title}</Button>
-            <Button size="sm" render={<a href={auth.signup.url} />} nativeButton={false}>{auth.signup.title}</Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              render={<a href={auth.login.url} />}
+              nativeButton={false}
+            >
+              {auth.login.title}
+            </Button>
+            <Button
+              size="sm"
+              render={<a href={auth.signup.url} />}
+              nativeButton={false}
+            >
+              {auth.signup.title}
+            </Button>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="gap-2"
+              render={<a href={dashboard.url} />}
+              nativeButton={false}
+            >
+              <LayoutDashboard className="size-4 shrink-0" />
+              {dashboard.title}
+            </Button>
           </div>
         </nav>
 
@@ -207,8 +241,28 @@ const Navbar1 = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    <Button variant="outline" render={<a href={auth.login.url} />} nativeButton={false}>{auth.login.title}</Button>
-                    <Button render={<a href={auth.signup.url} />} nativeButton={false}>{auth.signup.title}</Button>
+                    <Button
+                      variant="outline"
+                      render={<a href={auth.login.url} />}
+                      nativeButton={false}
+                    >
+                      {auth.login.title}
+                    </Button>
+                    <Button
+                      render={<a href={auth.signup.url} />}
+                      nativeButton={false}
+                    >
+                      {auth.signup.title}
+                    </Button>
+                    <Button
+                      variant="secondary"
+                      className="gap-2"
+                      render={<a href={dashboard.url} />}
+                      nativeButton={false}
+                    >
+                      <LayoutDashboard className="size-4 shrink-0" />
+                      {dashboard.title}
+                    </Button>
                   </div>
                 </div>
               </SheetContent>

@@ -71,7 +71,7 @@ const SidebarLogo = () => {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SidebarMenuButton size="lg" render={<Link href="/dashboard" />}>
+        <SidebarMenuButton size="lg" render={<Link href="/" />}>
           <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-primary">
             <img
               src={sidebarLogo.src}
@@ -139,9 +139,9 @@ const Sidebar1 = ({ className, children }: Sidebar1Props) => {
   const pageTitle = getPageTitle(pathname);
 
   return (
-    <SidebarProvider className={cn(className)}>
+    <SidebarProvider className={cn("h-full min-h-svh w-full", className)}>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="min-h-0 min-w-0">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator
